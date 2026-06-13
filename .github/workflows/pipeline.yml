@@ -1,0 +1,25 @@
+name: CI/CD Pipeline                #name of this workflow shown in github actions tab
+
+on:
+  push:
+    branches:
+      - main                        #trigges this workflow like jenkins webhook everytime code is pushed to the main branch
+
+jobs:
+  build:                            #defines a job called build. A wrokflow can contain multiple jobs.
+    runs-on: ubuntu-latest          #runs this job on a fresh ubuntu virtual machine provided by github
+    steps:                          #the list of sequential tasks this job performs
+      - name: Checkout code         #clones the repoistory code onto the runner so subsequent steps can access it
+        uses: actions/checkout@v4
+        
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}          #logs into docker hub using credentials securely stored as github secrets
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: devfabro83/js-docker-app:latest  #Builds the docker image from the dockerfile in the repo root and pushed it to dockerhub tagged devfabro83/js-docker-app:latest.
