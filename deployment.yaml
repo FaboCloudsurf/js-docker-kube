@@ -1,0 +1,19 @@
+apiVersion: apps/v1        # Kubernetes API version for Deployments
+kind: Deployment           # Type of resource
+metadata:                  # Information about this resource
+  name: js-deployment      # Name of the deployment
+spec:                      # The desired state
+  replicas: 2              # How many pods to run
+  selector:                # How Kubernetes finds the pods it manages
+    matchLabels:
+      app: js
+  template:                # The pod template
+    metadata:
+      labels:
+        app: js         # Label that matches the selector above
+    spec:
+      containers:
+      - name: js        # Container name
+        image: devfabro83/js-docker-app:latest  # Your Docker Hub image
+        ports:
+        - containerPort: 3000  # Port your Flask app listens on
